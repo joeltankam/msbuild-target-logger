@@ -3,17 +3,21 @@ using Microsoft.Build.Framework;
 
 namespace TargetLogger.EventSources
 {
-    internal static class ProjectEventSource
+    internal sealed class ProjectEventSource : BasicEventSource
     {
-        public static void OnStarted([NotNull] object sender, [NotNull] ProjectStartedEventArgs e)
+        public ProjectEventSource(IContextLogger logger) : base(logger)
         {
-            ContextLogger.WriteLine($"{e.ProjectFile.GetPathFileName()}");
-            ContextLogger.Level++;
         }
 
-        public static void OnFinished([NotNull] object sender, ProjectFinishedEventArgs e)
+        public void OnStarted([NotNull] ProjectStartedEventArgs e)
         {
-            ContextLogger.Level--;
+            logger.WriteLine($"{e.ProjectFile.GetPathFileName()}");
+            logger.Level++;
+        }
+
+        public void OnFinished([NotNull] ProjectFinishedEventArgs e)
+        {
+            logger.Level--;
         }
     }
 }

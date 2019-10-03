@@ -5,17 +5,29 @@ using TargetLogger.EventSources;
 
 namespace TargetLogger
 {
-    public class TargetLogger : Logger
+    [UsedImplicitly]
+    public sealed class TargetLogger : Logger
     {
+        private readonly TargetEventSource targetEventSource;
+        private readonly BuildEventSource buildEventSource;
+        private readonly ProjectEventSource projectEventSource;
+
+        public TargetLogger()
+        {
+            var logger = new ContextLogger(Verbosity);
+            targetEventSource = new TargetEventSource(logger);
+            buildEventSource = new BuildEventSource(logger);
+            projectEventSource = new ProjectEventSource(logger);
+        }
+
         public override void Initialize([NotNull] IEventSource eventSource)
         {
-            ContextLogger.Verbosity = Verbosity;
-            eventSource.TargetStarted += TargetEventSource.OnStarted;
-            eventSource.TargetFinished += TargetEventSource.OnFinished;
-            eventSource.ErrorRaised += BuildEventSource.OnErrorRaised;
-            eventSource.WarningRaised += BuildEventSource.OnWarningRaised;
-            eventSource.ProjectStarted += ProjectEventSource.OnStarted;
-            eventSource.ProjectFinished += ProjectEventSource.OnFinished;
+            eventSource.TargetStarted += (sender, args) => targetEventSource.OnStarted(args);
+            eventSource.TargetFinished += (sender, args) => targetEventSource.OnFinished(args);
+            eventSource.ErrorRaised += (sender, args) => buildEventSource.OnErrorRaised(args);
+            eventSource.WarningRaised += (sender, args) => buildEventSource.OnWarningRaised(args);
+            eventSource.ProjectStarted += (sender, args) => projectEventSource.OnStarted(args);
+            eventSource.ProjectFinished += (sender, args) => projectEventSource.OnFinished(args);
         }
     }
 }

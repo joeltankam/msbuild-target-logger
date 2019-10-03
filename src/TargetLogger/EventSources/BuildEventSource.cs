@@ -4,16 +4,20 @@ using Microsoft.Build.Framework;
 
 namespace TargetLogger.EventSources
 {
-    internal static class BuildEventSource
+    internal sealed class BuildEventSource : BasicEventSource
     {
-        public static void OnErrorRaised([NotNull] object sender, [NotNull] BuildErrorEventArgs e)
+        public BuildEventSource(IContextLogger logger) : base(logger)
         {
-            ContextLogger.WriteLine($"X ERR {e.Message} @ {e.File}({e.LineNumber},{e.ColumnNumber})", ConsoleColor.Red);
         }
 
-        public static void OnWarningRaised([NotNull] object sender, [NotNull] BuildWarningEventArgs e)
+        public void OnErrorRaised([NotNull] BuildErrorEventArgs e)
         {
-            ContextLogger.WriteLine($"! WRN {e.Message} @ {e.File}({e.LineNumber},{e.ColumnNumber})", ConsoleColor.Yellow);
+            logger.WriteLine($"X ERR {e.Message} @ {e.File}({e.LineNumber},{e.ColumnNumber})", ConsoleColor.Red);
+        }
+
+        public void OnWarningRaised([NotNull] BuildWarningEventArgs e)
+        {
+            logger.WriteLine($"! WRN {e.Message} @ {e.File}({e.LineNumber},{e.ColumnNumber})", ConsoleColor.Yellow);
         }
     }
 }

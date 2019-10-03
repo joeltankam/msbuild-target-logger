@@ -4,18 +4,28 @@ using Microsoft.Build.Framework;
 
 namespace TargetLogger.EventSources
 {
-    internal static class TargetEventSource
+    internal sealed class TargetEventSource : BasicEventSource
     {
-        public static void OnStarted([NotNull] object sender, [NotNull] TargetStartedEventArgs e)
+        public TargetEventSource(IContextLogger logger) : base(logger)
         {
-            var prefix = ContextLogger.Verbosity >= LoggerVerbosity.Normal ? $"{e.TargetFile.GetPathFileName()}@" : string.Empty;
-            ContextLogger.WriteLine($"{prefix}{e.TargetName} started");
         }
 
-        public static void OnFinished([NotNull] object sender, [NotNull] TargetFinishedEventArgs e)
+        public void OnStarted([NotNull] TargetStartedEventArgs e)
         {
-            var prefix = ContextLogger.Verbosity >= LoggerVerbosity.Normal ? $"{e.TargetFile.GetPathFileName()}@" : string.Empty;
-            ContextLogger.WriteLine($"{prefix}{e.TargetName} finished", ConsoleColor.Green);
+            var prefix = logger.Verbosity >= LoggerVerbosity.Normal
+                ? $"{e.TargetFile.GetPathFileName()}@"
+                : string.Empty;
+
+            logger.WriteLine($"{prefix}{e.TargetName} started");
+        }
+
+        public void OnFinished([NotNull] TargetFinishedEventArgs e)
+        {
+            var prefix = logger.Verbosity >= LoggerVerbosity.Normal
+                ? $"{e.TargetFile.GetPathFileName()}@"
+                : string.Empty;
+
+            logger.WriteLine($"{prefix}{e.TargetName} finished", ConsoleColor.Green);
         }
     }
 }

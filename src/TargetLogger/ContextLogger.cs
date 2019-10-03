@@ -4,9 +4,21 @@ using Microsoft.Build.Framework;
 
 namespace TargetLogger
 {
-    internal static class ContextLogger
+    internal interface IContextLogger
     {
-        public static void WriteLine([NotNull] string message, ConsoleColor color = ConsoleColor.Cyan)
+        LoggerVerbosity Verbosity { get; }
+        int Level { get; set; }
+        void WriteLine([NotNull] string message, ConsoleColor color = ConsoleColor.Cyan);
+    }
+
+    internal sealed class ContextLogger : IContextLogger
+    {
+        public ContextLogger(LoggerVerbosity verbosity)
+        {
+            Verbosity = verbosity;
+        }
+
+        public void WriteLine(string message, ConsoleColor color)
         {
             Console.ForegroundColor = color;
             Console.Write(string.Empty.PadLeft(Level, '\t'));
@@ -14,7 +26,7 @@ namespace TargetLogger
             Console.ResetColor();
         }
 
-        public static LoggerVerbosity Verbosity { get; set; }
-        public static int Level { get; set; }
+        public LoggerVerbosity Verbosity { get; }
+        public int Level { get; set; }
     }
 }
