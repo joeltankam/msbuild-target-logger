@@ -1,6 +1,6 @@
-﻿using System;
-using JetBrains.Annotations;
+﻿using JetBrains.Annotations;
 using Microsoft.Build.Framework;
+using TargetLogger.Logging;
 
 namespace TargetLogger.EventSources
 {
@@ -12,12 +12,12 @@ namespace TargetLogger.EventSources
 
         public void OnErrorRaised([NotNull] BuildErrorEventArgs e)
         {
-            logger.WriteLine($"X ERR {e.Message} @ {e.File}({e.LineNumber},{e.ColumnNumber})", ConsoleColor.Red);
+            logger.Error($"{e.Message} @ {e.File}({e.LineNumber},{e.ColumnNumber})");
         }
 
         public void OnWarningRaised([NotNull] BuildWarningEventArgs e)
         {
-            logger.WriteLine($"! WRN {e.Message} @ {e.File}({e.LineNumber},{e.ColumnNumber})", ConsoleColor.Yellow);
+            logger.Warn($"{e.Message} @ {e.File}({e.LineNumber},{e.ColumnNumber})");
         }
     }
 }

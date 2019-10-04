@@ -1,4 +1,6 @@
-﻿namespace TargetLogger.EventSources
+﻿using TargetLogger.Logging;
+
+namespace TargetLogger.EventSources
 {
     internal class BasicEventSource
     {

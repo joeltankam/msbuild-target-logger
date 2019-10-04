@@ -2,15 +2,16 @@
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
 using TargetLogger.EventSources;
+using TargetLogger.Logging;
 
 namespace TargetLogger
 {
     [UsedImplicitly]
     public sealed class TargetLogger : Logger
     {
-        private readonly TargetEventSource targetEventSource;
         private readonly BuildEventSource buildEventSource;
         private readonly ProjectEventSource projectEventSource;
+        private readonly TargetEventSource targetEventSource;
 
         public TargetLogger()
         {

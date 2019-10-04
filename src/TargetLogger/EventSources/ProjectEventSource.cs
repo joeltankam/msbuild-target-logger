@@ -1,5 +1,6 @@
 ﻿using JetBrains.Annotations;
 using Microsoft.Build.Framework;
+using TargetLogger.Logging;
 
 namespace TargetLogger.EventSources
 {
@@ -11,13 +12,14 @@ namespace TargetLogger.EventSources
 
         public void OnStarted([NotNull] ProjectStartedEventArgs e)
         {
-            logger.WriteLine($"{e.ProjectFile.GetPathFileName()}");
-            logger.Level++;
+            var logItem = new ContextLoggerItem(e.BuildEventContext.GetHashCode(), $"{e.ProjectFile.GetPathFileName()}");
+            logger.Track(logItem);
         }
 
         public void OnFinished([NotNull] ProjectFinishedEventArgs e)
         {
-            logger.Level--;
+            var logItem = new ContextLoggerItem(e.BuildEventContext.GetHashCode(), $"{e.ProjectFile.GetPathFileName()} finished");
+            logger.Track(logItem);
         }
     }
 }

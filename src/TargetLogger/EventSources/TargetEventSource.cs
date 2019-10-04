@@ -1,6 +1,6 @@
-﻿using System;
-using JetBrains.Annotations;
+﻿using JetBrains.Annotations;
 using Microsoft.Build.Framework;
+using TargetLogger.Logging;
 
 namespace TargetLogger.EventSources
 {
@@ -12,20 +12,22 @@ namespace TargetLogger.EventSources
 
         public void OnStarted([NotNull] TargetStartedEventArgs e)
         {
-            var prefix = logger.Verbosity >= LoggerVerbosity.Normal
-                ? $"{e.TargetFile.GetPathFileName()}@"
+            var suffix = logger.Verbosity >= LoggerVerbosity.Normal
+                ? $" @{e.TargetFile.GetPathFileName()}"
                 : string.Empty;
 
-            logger.WriteLine($"{prefix}{e.TargetName} started");
+            var logItem = new ContextLoggerItem(e.BuildEventContext.GetHashCode(), $"{e.TargetName}{suffix}");
+            logger.Track(logItem);
         }
 
         public void OnFinished([NotNull] TargetFinishedEventArgs e)
         {
-            var prefix = logger.Verbosity >= LoggerVerbosity.Normal
-                ? $"{e.TargetFile.GetPathFileName()}@"
+            var suffix = logger.Verbosity >= LoggerVerbosity.Normal
+                ? $" @{e.TargetFile.GetPathFileName()}"
                 : string.Empty;
 
-            logger.WriteLine($"{prefix}{e.TargetName} finished", ConsoleColor.Green);
+            var logItem = new ContextLoggerItem(e.BuildEventContext.GetHashCode(), $"{e.TargetName}{suffix} finished");
+            logger.Track(logItem);
         }
     }
 }
