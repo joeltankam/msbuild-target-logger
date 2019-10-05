@@ -26,7 +26,8 @@ namespace TargetLogger.EventSources
                 ? $" @{e.TargetFile.GetPathFileName()}"
                 : string.Empty;
 
-            var logItem = new ContextLoggerItem(e.BuildEventContext.GetHashCode(), $"{e.TargetName}{suffix} finished");
+            var status = e.Succeeded ? ContextLoggerItemStatus.Success : ContextLoggerItemStatus.Failure;
+            var logItem = new ContextLoggerItem(e.BuildEventContext.GetHashCode(), $"{e.TargetName}{suffix} finished", status);
             logger.Track(logItem);
         }
     }

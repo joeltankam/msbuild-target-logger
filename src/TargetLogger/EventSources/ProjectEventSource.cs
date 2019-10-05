@@ -18,7 +18,8 @@ namespace TargetLogger.EventSources
 
         public void OnFinished([NotNull] ProjectFinishedEventArgs e)
         {
-            var logItem = new ContextLoggerItem(e.BuildEventContext.GetHashCode(), $"{e.ProjectFile.GetPathFileName()} finished");
+            var status = e.Succeeded ? ContextLoggerItemStatus.Success : ContextLoggerItemStatus.Failure;
+            var logItem = new ContextLoggerItem(e.BuildEventContext.GetHashCode(), $"{e.ProjectFile.GetPathFileName()} finished", status);
             logger.Track(logItem);
         }
     }

@@ -9,5 +9,6 @@ namespace TargetLogger.Logging
         void Warn([NotNull] string message);
         void Error([NotNull] string message);
         void Track([NotNull] ContextLoggerItem logItem);
+        void Finalize([NotNull] ContextLoggerItem logItem);
     }
 }
