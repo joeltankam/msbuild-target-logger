@@ -7,14 +7,11 @@ namespace TargetLogger.Logging
 {
     internal sealed class ContextLogger : IContextLogger
     {
-        private readonly int cursorOffSetTop;
-        private readonly List<Entry> entries = new List<Entry>();
-        private readonly Dictionary<int, Entry> itemPositions = new Dictionary<int, Entry>();
+        private readonly Dictionary<int, Entry> entriesByItemId = new Dictionary<int, Entry>();
 
         public ContextLogger(LoggerVerbosity verbosity)
         {
             Verbosity = verbosity;
-            cursorOffSetTop = Console.CursorTop;
         }
 
         public void Error(string message)
@@ -31,7 +28,7 @@ namespace TargetLogger.Logging
 
         public void Track(ContextLoggerItem logItem)
         {
-            if (itemPositions.TryGetValue(logItem.Id, out var entry))
+            if (entriesByItemId.TryGetValue(logItem.Id, out var entry))
             {
                 entry.Text = logItem.Text;
                 Write(entry, true);
@@ -39,7 +36,7 @@ namespace TargetLogger.Logging
             else
             {
                 entry = CreateEntry(logItem.Text);
-                itemPositions.Add(logItem.Id, entry);
+                entriesByItemId.Add(logItem.Id, entry);
                 Write(entry);
             }
         }
@@ -47,18 +44,16 @@ namespace TargetLogger.Logging
         public LoggerVerbosity Verbosity { get; }
 
         [NotNull]
-        private Entry CreateEntry([NotNull] string text, ConsoleColor color = ConsoleColor.Cyan)
+        private static Entry CreateEntry([NotNull] string text, ConsoleColor color = ConsoleColor.Cyan)
         {
-            var entry = new Entry(entries.Count, text, color);
-            entries.Add(entry);
-            return entry;
+            return new Entry(Console.CursorTop, text, color);
         }
 
-        private void Write([NotNull] Entry entry, bool restoreCursor = false)
+        private static void Write([NotNull] Entry entry, bool restoreCursor = false)
         {
             var previousCursorTop = Console.CursorTop;
             var previousCursorLeft = Console.CursorLeft;
-            Console.SetCursorPosition(0, cursorOffSetTop + entry.Position);
+            Console.SetCursorPosition(0, entry.Position);
             Console.ForegroundColor = entry.Color;
             Console.WriteLine(entry.Text);
             Console.ResetColor();
