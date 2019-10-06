@@ -4,6 +4,6 @@
   <PropertyGroup>
     <RepoRoot>$(MsBuildThisFileDirectory.TrimEnd('\'))</RepoRoot>
     <PackageOutputPath>$(RepoRoot)\.build\packages</PackageOutputPath>
-    <DefaultTargetFramework>net461</DefaultTargetFramework>
+    <DefaultTargetFramework>netstandard2.0</DefaultTargetFramework>
   </PropertyGroup>
 </Project>
