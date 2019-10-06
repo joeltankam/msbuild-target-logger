@@ -50,13 +50,10 @@ namespace TargetLogger.Logging
         public void Finalize(BuildEventContext context, bool succeeded)
         {
             var id = GetId(context);
-            if (entriesByItemId.TryGetValue(id, out var entry))
-            {
-                entry.Finalize(succeeded);
-                Write(entry, true);
-            }
-            else
-                throw new InvalidOperationException($"Trying to finalize item {id} that has not been tracked");
+            if (!entriesByItemId.TryGetValue(id, out var entry)) return;
+
+            entry.Finalize(succeeded);
+            Write(entry, true);
         }
 
         public LoggerVerbosity Verbosity { get; }
