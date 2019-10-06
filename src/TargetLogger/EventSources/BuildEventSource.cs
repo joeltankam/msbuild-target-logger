@@ -17,13 +17,13 @@ namespace TargetLogger.EventSources
 
         public void OnWarningRaised([NotNull] BuildWarningEventArgs e)
         {
-            Logger.Warn(e.BuildEventContext, $"{e.Message} @ {e.File}({e.LineNumber},{e.ColumnNumber})");
+            Logger.Warn(e.BuildEventContext, $"{e.Message} @{e.File}({e.LineNumber},{e.ColumnNumber})");
             Logger.Update(e.BuildEventContext);
         }
 
         public void OnErrorRaised([NotNull] BuildErrorEventArgs e)
         {
-            Logger.Error(e.BuildEventContext, $"{e.Message} @ {e.File}({e.LineNumber},{e.ColumnNumber})");
+            Logger.Error(e.BuildEventContext, $"{e.Message} @{e.File}({e.LineNumber},{e.ColumnNumber})");
             Logger.Update(e.BuildEventContext);
         }
     }

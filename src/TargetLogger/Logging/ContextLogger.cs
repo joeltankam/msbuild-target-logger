@@ -28,13 +28,13 @@ namespace TargetLogger.Logging
             if (entriesByItemId.TryGetValue(id, out var entry))
             {
                 entry.Text = message;
-                Write(entry);
+                Log(entry);
             }
             else
             {
                 entry = new ContextLoggerEntry(Console.CursorTop, GetLevel(context), message, ConsoleColor.Cyan);
                 entriesByItemId.Add(id, entry);
-                Write(entry, false);
+                Log(entry, false);
             }
         }
 
@@ -42,7 +42,7 @@ namespace TargetLogger.Logging
         {
             var id = GetId(context);
             if (entriesByItemId.TryGetValue(id, out var entry))
-                Write(entry);
+                Log(entry);
         }
 
         public void Finalize(BuildEventContext context, bool succeeded)
@@ -51,7 +51,7 @@ namespace TargetLogger.Logging
             if (!entriesByItemId.TryGetValue(id, out var entry)) return;
 
             entry.Finalize(succeeded);
-            Write(entry);
+            Log(entry);
         }
 
         public void Indent(BuildEventContext context)
@@ -92,7 +92,7 @@ namespace TargetLogger.Logging
             return hash;
         }
 
-        private static void Write([NotNull] ContextLoggerEntry logEntry, bool restoreCursor = true)
+        private static void Log([NotNull] ContextLoggerEntry logEntry, bool restoreCursor = true)
         {
             var previousCursorTop = Console.CursorTop;
             var previousCursorLeft = Console.CursorLeft;
