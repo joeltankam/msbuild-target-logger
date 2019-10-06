@@ -12,12 +12,12 @@ namespace TargetLogger.EventSources
 
         public void OnStarted([NotNull] ProjectStartedEventArgs e)
         {
-            logger.Track(ContextLogger.GetLogId(e.BuildEventContext), $"{e.ProjectFile.GetPathFileName()}");
+            logger.Track(e.BuildEventContext, $"{e.ProjectFile.GetPathFileName()}");
         }
 
         public void OnFinished([NotNull] ProjectFinishedEventArgs e)
         {
-            logger.Finalize(ContextLogger.GetLogId(e.BuildEventContext), e.Succeeded);
+            logger.Finalize(e.BuildEventContext, e.Succeeded);
         }
     }
 }

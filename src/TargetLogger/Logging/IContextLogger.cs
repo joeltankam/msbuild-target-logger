@@ -8,8 +8,8 @@ namespace TargetLogger.Logging
         LoggerVerbosity Verbosity { get; }
         void Warn([NotNull] string message);
         void Error([NotNull] string message);
-        void Track(int id, [NotNull] string message);
-        void Update(int id);
-        void Finalize(int id, bool succeeded);
+        void Track([NotNull] BuildEventContext context, [NotNull] string message);
+        void Update([NotNull] BuildEventContext context);
+        void Finalize([NotNull] BuildEventContext context, bool succeeded);
     }
 }

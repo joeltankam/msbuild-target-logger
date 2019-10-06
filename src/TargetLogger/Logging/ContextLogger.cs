@@ -14,13 +14,19 @@ namespace TargetLogger.Logging
             Verbosity = verbosity;
         }
 
+        public void Warn(string message)
+        {
+            ConsoleHelper.WriteLine($"WRN {message}", ConsoleColor.Yellow);
+        }
+
         public void Error(string message)
         {
             ConsoleHelper.WriteLine($"ERR {message}", ConsoleColor.Red);
         }
 
-        public void Track(int id, string message)
+        public void Track(BuildEventContext context, string message)
         {
+            var id = GetId(context);
             if (entriesByItemId.TryGetValue(id, out var entry))
             {
                 entry.Text = message;
@@ -34,19 +40,16 @@ namespace TargetLogger.Logging
             }
         }
 
-        public void Update(int id)
+        public void Update(BuildEventContext context)
         {
+            var id = GetId(context);
             if (entriesByItemId.TryGetValue(id, out var entry))
                 Write(entry, true);
         }
 
-        public void Warn(string message)
+        public void Finalize(BuildEventContext context, bool succeeded)
         {
-            ConsoleHelper.WriteLine($"WRN {message}", ConsoleColor.Yellow);
-        }
-
-        public void Finalize(int id, bool succeeded)
-        {
+            var id = GetId(context);
             if (entriesByItemId.TryGetValue(id, out var entry))
             {
                 entry.Finalize(succeeded);
@@ -56,7 +59,9 @@ namespace TargetLogger.Logging
                 throw new InvalidOperationException($"Trying to finalize item {id} that has not been tracked");
         }
 
-        public static int GetLogId([NotNull] BuildEventContext context)
+        public LoggerVerbosity Verbosity { get; }
+
+        private static int GetId([NotNull] BuildEventContext context)
         {
             // Same as BuildEventContext.GetHashCode(), except we don't go down to task level
             var hash = 17;
@@ -68,8 +73,6 @@ namespace TargetLogger.Logging
 
             return hash;
         }
-
-        public LoggerVerbosity Verbosity { get; }
 
         [NotNull]
         private static ContextLoggerEntry CreateEntry([NotNull] string text, ConsoleColor color)

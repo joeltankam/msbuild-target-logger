@@ -12,7 +12,7 @@ namespace TargetLogger.EventSources
 
         public void OnMessageRaised([NotNull] BuildMessageEventArgs e)
         {
-            logger.Update(ContextLogger.GetLogId(e.BuildEventContext));
+            logger.Update(e.BuildEventContext);
         }
 
         public void OnWarningRaised([NotNull] BuildWarningEventArgs e)
