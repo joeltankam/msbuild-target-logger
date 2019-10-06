@@ -34,6 +34,12 @@ namespace TargetLogger.Logging
             }
         }
 
+        public void Update(int id)
+        {
+            if (entriesByItemId.TryGetValue(id, out var entry))
+                Write(entry, true);
+        }
+
         public void Warn(string message)
         {
             ConsoleHelper.WriteLine($"WRN {message}", ConsoleColor.Yellow);
@@ -48,6 +54,19 @@ namespace TargetLogger.Logging
             }
             else
                 throw new InvalidOperationException($"Trying to finalize item {id} that has not been tracked");
+        }
+
+        public static int GetLogId([NotNull] BuildEventContext context)
+        {
+            // Same as BuildEventContext.GetHashCode(), except we don't go down to task level
+            var hash = 17;
+            hash = hash * 31 + context.NodeId;
+            hash = hash * 31 + context.EvaluationId;
+            hash = hash * 31 + context.TargetId;
+            hash = hash * 31 + context.ProjectContextId;
+            hash = hash * 31 + context.ProjectInstanceId;
+
+            return hash;
         }
 
         public LoggerVerbosity Verbosity { get; }

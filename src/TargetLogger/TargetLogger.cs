@@ -25,8 +25,9 @@ namespace TargetLogger
         {
             eventSource.TargetStarted += (sender, args) => targetEventSource.OnStarted(args);
             eventSource.TargetFinished += (sender, args) => targetEventSource.OnFinished(args);
-            eventSource.ErrorRaised += (sender, args) => buildEventSource.OnErrorRaised(args);
+            eventSource.MessageRaised += (sender, args) => buildEventSource.OnMessageRaised(args);
             eventSource.WarningRaised += (sender, args) => buildEventSource.OnWarningRaised(args);
+            eventSource.ErrorRaised += (sender, args) => buildEventSource.OnErrorRaised(args);
             eventSource.ProjectStarted += (sender, args) => projectEventSource.OnStarted(args);
             eventSource.ProjectFinished += (sender, args) => projectEventSource.OnFinished(args);
         }

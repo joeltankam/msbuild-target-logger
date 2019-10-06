@@ -16,12 +16,12 @@ namespace TargetLogger.EventSources
                 ? $" @{e.TargetFile.GetPathFileName()}"
                 : string.Empty;
 
-            logger.Track(e.BuildEventContext.GetHashCode(), $"{e.TargetName}{suffix}");
+            logger.Track(ContextLogger.GetLogId(e.BuildEventContext), $"{e.TargetName}{suffix}");
         }
 
         public void OnFinished([NotNull] TargetFinishedEventArgs e)
         {
-            logger.Finalize(e.BuildEventContext.GetHashCode(), e.Succeeded);
+            logger.Finalize(ContextLogger.GetLogId(e.BuildEventContext), e.Succeeded);
         }
     }
 }

@@ -10,14 +10,19 @@ namespace TargetLogger.EventSources
         {
         }
 
-        public void OnErrorRaised([NotNull] BuildErrorEventArgs e)
+        public void OnMessageRaised([NotNull] BuildMessageEventArgs e)
         {
-            logger.Error($"{e.Message} @ {e.File}({e.LineNumber},{e.ColumnNumber})");
+            logger.Update(ContextLogger.GetLogId(e.BuildEventContext));
         }
 
         public void OnWarningRaised([NotNull] BuildWarningEventArgs e)
         {
             logger.Warn($"{e.Message} @ {e.File}({e.LineNumber},{e.ColumnNumber})");
+        }
+
+        public void OnErrorRaised([NotNull] BuildErrorEventArgs e)
+        {
+            logger.Error($"{e.Message} @ {e.File}({e.LineNumber},{e.ColumnNumber})");
         }
     }
 }
