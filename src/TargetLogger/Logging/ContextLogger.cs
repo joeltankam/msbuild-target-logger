@@ -16,70 +16,41 @@ namespace TargetLogger.Logging
 
         public void Error(string message)
         {
-            var error = CreateEntry($"X ERR {message}", ConsoleColor.Red);
-            Write(error);
+            ConsoleHelper.WriteLine($"ERR {message}", ConsoleColor.Red);
         }
 
-        public void Warn(string message)
+        public void Track(int id, string message)
         {
-            var warning = CreateEntry($"! WRN {message}", ConsoleColor.Yellow);
-            Write(warning);
-        }
-
-        public void Track(ContextLoggerItem logItem)
-        {
-            if (entriesByItemId.TryGetValue(logItem.Id, out var entry))
+            if (entriesByItemId.TryGetValue(id, out var entry))
             {
-                UpdateEntry(entry, logItem);
+                entry.Text = message;
                 Write(entry, true);
             }
             else
             {
-                entry = CreateEntry(logItem);
-                entriesByItemId.Add(logItem.Id, entry);
+                entry = CreateEntry(message, ConsoleColor.Cyan);
+                entriesByItemId.Add(id, entry);
                 Write(entry);
             }
         }
 
-        public void Finalize(ContextLoggerItem logItem)
+        public void Warn(string message)
         {
-            if (entriesByItemId.TryGetValue(logItem.Id, out var entry))
+            ConsoleHelper.WriteLine($"WRN {message}", ConsoleColor.Yellow);
+        }
+
+        public void Finalize(int id, bool succeeded)
+        {
+            if (entriesByItemId.TryGetValue(id, out var entry))
             {
-                UpdateEntry(entry, logItem);
+                entry.Finalize(succeeded);
                 Write(entry, true);
             }
             else
-                throw new InvalidOperationException($"Trying to finalize item {logItem.Id} that has not been tracked");
+                throw new InvalidOperationException($"Trying to finalize item {id} that has not been tracked");
         }
 
         public LoggerVerbosity Verbosity { get; }
-
-        private static void UpdateEntry([NotNull] ContextLoggerEntry logEntry, [NotNull] ContextLoggerItem logItem)
-        {
-            logEntry.Text = logItem.Text;
-            logEntry.Color = GetEntryColor(logItem);
-        }
-
-        private static ConsoleColor GetEntryColor([NotNull] ContextLoggerItem logItem)
-        {
-            switch (logItem.Status)
-            {
-                case ContextLoggerItemStatus.None:
-                    return ConsoleColor.Cyan;
-                case ContextLoggerItemStatus.Success:
-                    return ConsoleColor.Green;
-                case ContextLoggerItemStatus.Failure:
-                    return ConsoleColor.Red;
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
-        }
-
-        [NotNull]
-        private static ContextLoggerEntry CreateEntry([NotNull] ContextLoggerItem logItem)
-        {
-            return CreateEntry(logItem.Text, GetEntryColor(logItem));
-        }
 
         [NotNull]
         private static ContextLoggerEntry CreateEntry([NotNull] string text, ConsoleColor color)
@@ -92,25 +63,60 @@ namespace TargetLogger.Logging
             var previousCursorTop = Console.CursorTop;
             var previousCursorLeft = Console.CursorLeft;
             Console.SetCursorPosition(0, logEntry.Position);
-            Console.ForegroundColor = logEntry.Color;
-            Console.WriteLine(logEntry.Text);
-            Console.ResetColor();
+            ConsoleHelper.WriteLine(logEntry.Text, logEntry.Color);
             if (restoreCursor)
                 Console.SetCursorPosition(previousCursorLeft, previousCursorTop);
         }
 
         private sealed class ContextLoggerEntry
         {
+            [NotNull] private readonly Spinner spinner = new Spinner();
+            private string text;
+
             internal ContextLoggerEntry(int position, [NotNull] string text, ConsoleColor color)
             {
                 Position = position;
-                Text = text;
                 Color = color;
+                this.text = text;
             }
 
             internal int Position { get; }
-            [NotNull] internal string Text { get; set; }
-            internal ConsoleColor Color { get; set; }
+
+            [NotNull]
+            internal string Text
+            {
+                get => $"{spinner.Next()} {text}";
+                set => text = value;
+            }
+
+            internal ConsoleColor Color { get; private set; }
+
+            public void Finalize(bool succeeded)
+            {
+                spinner.Stop(succeeded);
+                Color = succeeded ? ConsoleColor.Green : ConsoleColor.Red;
+            }
+
+            private sealed class Spinner
+            {
+                private static readonly string[] Sequence = { "/", "-", "\\", "|", "+", "x" };
+                private bool finished;
+                private int index;
+
+                public string Next()
+                {
+                    if (!finished)
+                        index = (index + 1) % 4;
+
+                    return Sequence[index];
+                }
+
+                public void Stop(bool success = true)
+                {
+                    index = success ? 4 : 5;
+                    finished = true;
+                }
+            }
         }
     }
 }

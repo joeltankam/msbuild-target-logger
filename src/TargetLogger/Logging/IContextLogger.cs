@@ -8,7 +8,7 @@ namespace TargetLogger.Logging
         LoggerVerbosity Verbosity { get; }
         void Warn([NotNull] string message);
         void Error([NotNull] string message);
-        void Track([NotNull] ContextLoggerItem logItem);
-        void Finalize([NotNull] ContextLoggerItem logItem);
+        void Track(int id, [NotNull] string message);
+        void Finalize(int id, bool succeeded);
     }
 }

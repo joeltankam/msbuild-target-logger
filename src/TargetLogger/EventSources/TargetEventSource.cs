@@ -16,19 +16,12 @@ namespace TargetLogger.EventSources
                 ? $" @{e.TargetFile.GetPathFileName()}"
                 : string.Empty;
 
-            var logItem = new ContextLoggerItem(e.BuildEventContext.GetHashCode(), $"{e.TargetName}{suffix}");
-            logger.Track(logItem);
+            logger.Track(e.BuildEventContext.GetHashCode(), $"{e.TargetName}{suffix}");
         }
 
         public void OnFinished([NotNull] TargetFinishedEventArgs e)
         {
-            var suffix = logger.Verbosity >= LoggerVerbosity.Normal
-                ? $" @{e.TargetFile.GetPathFileName()}"
-                : string.Empty;
-
-            var status = e.Succeeded ? ContextLoggerItemStatus.Success : ContextLoggerItemStatus.Failure;
-            var logItem = new ContextLoggerItem(e.BuildEventContext.GetHashCode(), $"{e.TargetName}{suffix} finished", status);
-            logger.Track(logItem);
+            logger.Finalize(e.BuildEventContext.GetHashCode(), e.Succeeded);
         }
     }
 }
