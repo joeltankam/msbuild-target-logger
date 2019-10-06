@@ -6,20 +6,20 @@ namespace TargetLogger.EventSources
 {
     internal sealed class ProjectEventSource : BasicEventSource
     {
-        public ProjectEventSource(IContextLogger logger) : base(logger)
+        public ProjectEventSource([NotNull] IContextLogger logger) : base(logger)
         {
         }
 
         public void OnStarted([NotNull] ProjectStartedEventArgs e)
         {
-            logger.Track(e.BuildEventContext, $"{e.ProjectFile.GetPathFileName()}");
-            logger.Indent(e.BuildEventContext);
+            Logger.Track(e.BuildEventContext, $"{e.ProjectFile.GetPathFileName()}");
+            Logger.Indent(e.BuildEventContext);
         }
 
         public void OnFinished([NotNull] ProjectFinishedEventArgs e)
         {
-            logger.Outdent(e.BuildEventContext);
-            logger.Finalize(e.BuildEventContext, e.Succeeded);
+            Logger.Outdent(e.BuildEventContext);
+            Logger.Finalize(e.BuildEventContext, e.Succeeded);
         }
     }
 }

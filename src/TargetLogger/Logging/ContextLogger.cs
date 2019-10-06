@@ -7,8 +7,8 @@ namespace TargetLogger.Logging
 {
     internal sealed class ContextLogger : IContextLogger
     {
-        private readonly Dictionary<int, ContextLoggerEntry> entriesByItemId = new Dictionary<int, ContextLoggerEntry>();
-        private readonly Dictionary<int, int> nodeLevels = new Dictionary<int, int>();
+        [NotNull] private readonly Dictionary<int, ContextLoggerEntry> entriesByItemId = new Dictionary<int, ContextLoggerEntry>();
+        [NotNull] private readonly Dictionary<int, int> nodeLevels = new Dictionary<int, int>();
 
         public ContextLogger(LoggerVerbosity verbosity)
         {
@@ -33,13 +33,13 @@ namespace TargetLogger.Logging
             if (entriesByItemId.TryGetValue(id, out var entry))
             {
                 entry.Text = message;
-                Write(entry, true);
+                Write(entry);
             }
             else
             {
                 entry = new ContextLoggerEntry(Console.CursorTop, GetLevel(context), message, ConsoleColor.Cyan);
                 entriesByItemId.Add(id, entry);
-                Write(entry);
+                Write(entry, false);
             }
         }
 
@@ -47,7 +47,7 @@ namespace TargetLogger.Logging
         {
             var id = GetId(context);
             if (entriesByItemId.TryGetValue(id, out var entry))
-                Write(entry, true);
+                Write(entry);
         }
 
         public void Finalize(BuildEventContext context, bool succeeded)
@@ -56,7 +56,7 @@ namespace TargetLogger.Logging
             if (!entriesByItemId.TryGetValue(id, out var entry)) return;
 
             entry.Finalize(succeeded);
-            Write(entry, true);
+            Write(entry);
         }
 
         public void Indent(BuildEventContext context)
@@ -99,7 +99,7 @@ namespace TargetLogger.Logging
             return hash;
         }
 
-        private static void Write([NotNull] ContextLoggerEntry logEntry, bool restoreCursor = false)
+        private static void Write([NotNull] ContextLoggerEntry logEntry, bool restoreCursor = true)
         {
             var previousCursorTop = Console.CursorTop;
             var previousCursorLeft = Console.CursorLeft;
@@ -113,7 +113,7 @@ namespace TargetLogger.Logging
         {
             private readonly int level;
             [NotNull] private readonly Spinner spinner = new Spinner();
-            private string text;
+            [NotNull] private string text;
 
             internal ContextLoggerEntry(int position, int level, [NotNull] string text, ConsoleColor color)
             {
@@ -142,10 +142,11 @@ namespace TargetLogger.Logging
 
             private sealed class Spinner
             {
-                private static readonly string[] Sequence = { "/", "-", "\\", "|", "+", "x" };
+                [NotNull] [ItemNotNull] private static readonly string[] Sequence = { "/", "-", "\\", "|", "+", "x" };
                 private bool finished;
                 private int index;
 
+                [NotNull]
                 public string Next()
                 {
                     if (!finished)

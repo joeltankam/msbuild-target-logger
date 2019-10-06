@@ -6,24 +6,24 @@ namespace TargetLogger.EventSources
 {
     internal sealed class TargetEventSource : BasicEventSource
     {
-        public TargetEventSource(IContextLogger logger) : base(logger)
+        public TargetEventSource([NotNull] IContextLogger logger) : base(logger)
         {
         }
 
         public void OnStarted([NotNull] TargetStartedEventArgs e)
         {
-            var suffix = logger.Verbosity >= LoggerVerbosity.Normal
+            var suffix = Logger.Verbosity >= LoggerVerbosity.Normal
                 ? $" @{e.TargetFile.GetPathFileName()}"
                 : string.Empty;
 
-            logger.Track(e.BuildEventContext, $"{e.TargetName}{suffix}");
-            logger.Indent(e.BuildEventContext);
+            Logger.Track(e.BuildEventContext, $"{e.TargetName}{suffix}");
+            Logger.Indent(e.BuildEventContext);
         }
 
         public void OnFinished([NotNull] TargetFinishedEventArgs e)
         {
-            logger.Outdent(e.BuildEventContext);
-            logger.Finalize(e.BuildEventContext, e.Succeeded);
+            Logger.Outdent(e.BuildEventContext);
+            Logger.Finalize(e.BuildEventContext, e.Succeeded);
         }
     }
 }

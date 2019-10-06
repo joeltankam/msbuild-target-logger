@@ -1,14 +1,15 @@
-﻿using TargetLogger.Logging;
+﻿using JetBrains.Annotations;
+using TargetLogger.Logging;
 
 namespace TargetLogger.EventSources
 {
     internal class BasicEventSource
     {
-        protected readonly IContextLogger logger;
+        [NotNull] protected readonly IContextLogger Logger;
 
-        protected BasicEventSource(IContextLogger logger)
+        protected BasicEventSource([NotNull] IContextLogger logger)
         {
-            this.logger = logger;
+            Logger = logger;
         }
     }
 }
