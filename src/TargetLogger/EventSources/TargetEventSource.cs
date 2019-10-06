@@ -12,11 +12,7 @@ namespace TargetLogger.EventSources
 
         public void OnStarted([NotNull] TargetStartedEventArgs e)
         {
-            var suffix = Logger.Verbosity >= LoggerVerbosity.Normal
-                ? $" @{e.TargetFile.GetPathFileName()}"
-                : string.Empty;
-
-            Logger.Track(e.BuildEventContext, $"{e.TargetName}{suffix}");
+            Logger.Track(e.BuildEventContext, $"{e.TargetName}");
             Logger.Indent(e.BuildEventContext);
         }
 

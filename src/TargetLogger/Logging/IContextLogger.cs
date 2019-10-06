@@ -5,8 +5,6 @@ namespace TargetLogger.Logging
 {
     internal interface IContextLogger
     {
-        LoggerVerbosity Verbosity { get; }
-
         void Warn([NotNull] BuildEventContext context, [NotNull] string message);
         void Error([NotNull] BuildEventContext context, [NotNull] string message);
 

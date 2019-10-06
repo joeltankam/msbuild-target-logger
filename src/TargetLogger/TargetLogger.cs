@@ -15,7 +15,7 @@ namespace TargetLogger
 
         public TargetLogger()
         {
-            var logger = new ContextLogger(Verbosity);
+            var logger = new ContextLogger();
             targetEventSource = new TargetEventSource(logger);
             buildEventSource = new BuildEventSource(logger);
             projectEventSource = new ProjectEventSource(logger);

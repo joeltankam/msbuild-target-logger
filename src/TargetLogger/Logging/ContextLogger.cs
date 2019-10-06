@@ -10,11 +10,6 @@ namespace TargetLogger.Logging
         [NotNull] private readonly Dictionary<int, ContextLoggerEntry> entriesByItemId = new Dictionary<int, ContextLoggerEntry>();
         [NotNull] private readonly Dictionary<int, int> nodeLevels = new Dictionary<int, int>();
 
-        public ContextLogger(LoggerVerbosity verbosity)
-        {
-            Verbosity = verbosity;
-        }
-
         public void Warn(BuildEventContext context, string message)
         {
             var level = GetLevel(context);
@@ -74,8 +69,6 @@ namespace TargetLogger.Logging
             if (nodeLevels.ContainsKey(nodeId))
                 nodeLevels[nodeId]--;
         }
-
-        public LoggerVerbosity Verbosity { get; }
 
         private int GetLevel([NotNull] BuildEventContext context)
         {
