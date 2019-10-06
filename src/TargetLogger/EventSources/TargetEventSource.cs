@@ -17,10 +17,12 @@ namespace TargetLogger.EventSources
                 : string.Empty;
 
             logger.Track(e.BuildEventContext, $"{e.TargetName}{suffix}");
+            logger.Indent(e.BuildEventContext);
         }
 
         public void OnFinished([NotNull] TargetFinishedEventArgs e)
         {
+            logger.Outdent(e.BuildEventContext);
             logger.Finalize(e.BuildEventContext, e.Succeeded);
         }
     }

@@ -8,20 +8,23 @@ namespace TargetLogger.Logging
     internal sealed class ContextLogger : IContextLogger
     {
         private readonly Dictionary<int, ContextLoggerEntry> entriesByItemId = new Dictionary<int, ContextLoggerEntry>();
+        private readonly Dictionary<int, int> nodeLevels = new Dictionary<int, int>();
 
         public ContextLogger(LoggerVerbosity verbosity)
         {
             Verbosity = verbosity;
         }
 
-        public void Warn(string message)
+        public void Warn(BuildEventContext context, string message)
         {
-            ConsoleHelper.WriteLine($"WRN {message}", ConsoleColor.Yellow);
+            var level = GetLevel(context);
+            ConsoleHelper.WriteLine($"{string.Empty.PadLeft(level, '\t')}WRN {message}", ConsoleColor.Yellow);
         }
 
-        public void Error(string message)
+        public void Error(BuildEventContext context, string message)
         {
-            ConsoleHelper.WriteLine($"ERR {message}", ConsoleColor.Red);
+            var level = GetLevel(context);
+            ConsoleHelper.WriteLine($"{string.Empty.PadLeft(level, '\t')}ERR {message}", ConsoleColor.Red);
         }
 
         public void Track(BuildEventContext context, string message)
@@ -34,7 +37,7 @@ namespace TargetLogger.Logging
             }
             else
             {
-                entry = CreateEntry(message, ConsoleColor.Cyan);
+                entry = new ContextLoggerEntry(Console.CursorTop, GetLevel(context), message, ConsoleColor.Cyan);
                 entriesByItemId.Add(id, entry);
                 Write(entry);
             }
@@ -56,7 +59,32 @@ namespace TargetLogger.Logging
             Write(entry, true);
         }
 
+        public void Indent(BuildEventContext context)
+        {
+            var nodeId = context.NodeId;
+            if (nodeLevels.ContainsKey(nodeId))
+                nodeLevels[nodeId]++;
+            else
+                nodeLevels.Add(nodeId, 1);
+        }
+
+        public void Outdent(BuildEventContext context)
+        {
+            var nodeId = context.NodeId;
+            if (nodeLevels.ContainsKey(nodeId))
+                nodeLevels[nodeId]--;
+        }
+
         public LoggerVerbosity Verbosity { get; }
+
+        private int GetLevel([NotNull] BuildEventContext context)
+        {
+            var level = 0;
+            if (nodeLevels.ContainsKey(context.NodeId))
+                level = nodeLevels[context.NodeId];
+
+            return level;
+        }
 
         private static int GetId([NotNull] BuildEventContext context)
         {
@@ -71,12 +99,6 @@ namespace TargetLogger.Logging
             return hash;
         }
 
-        [NotNull]
-        private static ContextLoggerEntry CreateEntry([NotNull] string text, ConsoleColor color)
-        {
-            return new ContextLoggerEntry(Console.CursorTop, text, color);
-        }
-
         private static void Write([NotNull] ContextLoggerEntry logEntry, bool restoreCursor = false)
         {
             var previousCursorTop = Console.CursorTop;
@@ -89,13 +111,15 @@ namespace TargetLogger.Logging
 
         private sealed class ContextLoggerEntry
         {
+            private readonly int level;
             [NotNull] private readonly Spinner spinner = new Spinner();
             private string text;
 
-            internal ContextLoggerEntry(int position, [NotNull] string text, ConsoleColor color)
+            internal ContextLoggerEntry(int position, int level, [NotNull] string text, ConsoleColor color)
             {
                 Position = position;
                 Color = color;
+                this.level = level;
                 this.text = text;
             }
 
@@ -104,7 +128,7 @@ namespace TargetLogger.Logging
             [NotNull]
             internal string Text
             {
-                get => $"{spinner.Next()} {text}";
+                get => $"{string.Empty.PadLeft(level, '\t')}{spinner.Next()} {text}";
                 set => text = value;
             }
 
