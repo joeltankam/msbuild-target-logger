@@ -1,6 +1,13 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
+    <Version>0.1</Version>
+    <Authors>Joel TANKAM</Authors>
+    <Title>TargetLogger</Title>
+    <Description>A console logger that logs only targets being built.</Description>
+    <PackageTags>logger;console;target;project;progress</PackageTags>
+    <PackageProjectUrl>https://github.com/joeltankam/msbuild-target-logger</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/joeltankam/msbuild-target-logger.git</RepositoryUrl>
     <TargetFramework>$(DefaultTargetFramework)</TargetFramework>
   </PropertyGroup>
 
