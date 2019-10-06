@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="Current" DefaultTargets="Target41" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="Helper.proj" />
+  <Target Name="Target41">
+    <Sleep Delay="1500" />
+  </Target>
+</Project>

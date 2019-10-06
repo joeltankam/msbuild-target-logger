@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="Current" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="Helper.proj" />
+  <Target Name="Target31">
+    <Message Text="Target1" />
+  </Target>
+
+  <Target Name="Target32">
+    <Message Text="Target2" />
+    <Warning Text="Warning logged during build process." />
+  </Target>
+
+  <Target Name="Target33">
+    <Message Text="Target3" />
+  </Target>
+</Project>
