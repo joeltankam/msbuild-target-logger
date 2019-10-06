@@ -4,7 +4,7 @@ using TargetLogger.Logging;
 
 namespace TargetLogger.EventSources
 {
-    internal sealed class TargetEventSource : BasicEventSource
+    internal sealed class TargetEventSource : PersistedEventSource
     {
         public TargetEventSource([NotNull] IContextLogger logger) : base(logger)
         {
@@ -14,12 +14,13 @@ namespace TargetLogger.EventSources
         {
             Logger.Track(e.BuildEventContext, $"{e.TargetName}");
             Logger.Indent(e.BuildEventContext);
+            Save(e);
         }
 
         public void OnFinished([NotNull] TargetFinishedEventArgs e)
         {
             Logger.Outdent(e.BuildEventContext);
-            Logger.Finalize(e.BuildEventContext, e.Succeeded);
+            Logger.Finalize(e.BuildEventContext, GetDuration(e), e.Succeeded);
         }
     }
 }

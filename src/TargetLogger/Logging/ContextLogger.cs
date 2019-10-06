@@ -45,12 +45,12 @@ namespace TargetLogger.Logging
                 Log(entry);
         }
 
-        public void Finalize(BuildEventContext context, bool succeeded)
+        public void Finalize(BuildEventContext context, TimeSpan duration, bool succeeded)
         {
             var id = GetId(context);
             if (!entriesByItemId.TryGetValue(id, out var entry)) return;
 
-            entry.Finalize(succeeded);
+            entry.Finalize(duration, succeeded);
             Log(entry);
         }
 
@@ -97,7 +97,11 @@ namespace TargetLogger.Logging
             var previousCursorTop = Console.CursorTop;
             var previousCursorLeft = Console.CursorLeft;
             Console.SetCursorPosition(0, logEntry.Position);
-            ConsoleHelper.WriteLine(logEntry.Text, logEntry.Color);
+            ConsoleHelper.Write(logEntry.Text, logEntry.Color);
+            if (logEntry.AdditionalInformation != null)
+                ConsoleHelper.Write($" [{logEntry.AdditionalInformation}]", ConsoleColor.DarkGray);
+
+            Console.WriteLine();
             if (restoreCursor)
                 Console.SetCursorPosition(previousCursorLeft, previousCursorTop);
         }
@@ -117,6 +121,7 @@ namespace TargetLogger.Logging
             }
 
             internal int Position { get; }
+            [CanBeNull] internal string AdditionalInformation { get; private set; }
 
             [NotNull]
             internal string Text
@@ -127,15 +132,16 @@ namespace TargetLogger.Logging
 
             internal ConsoleColor Color { get; private set; }
 
-            public void Finalize(bool succeeded)
+            public void Finalize(TimeSpan duration, bool succeeded)
             {
                 spinner.Stop(succeeded);
                 Color = succeeded ? ConsoleColor.Green : ConsoleColor.Red;
+                AdditionalInformation = duration.ToShortString();
             }
 
             private sealed class Spinner
             {
-                [NotNull] [ItemNotNull] private static readonly string[] Sequence = { "/", "-", "\\", "|", "+", "x" };
+                [NotNull, ItemNotNull] private static readonly string[] Sequence = { "/", "-", "\\", "|", "+", "x" };
                 private bool finished;
                 private int index;
 
