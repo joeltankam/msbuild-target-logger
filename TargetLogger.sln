@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29324.140
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TargetLogger", "src\TargetLogger\TargetLogger.csproj", "{09CDC4EB-D196-4755-9CA2-DD54711326E5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TargetLogger", "src\TargetLogger\TargetLogger.csproj", "{09CDC4EB-D196-4755-9CA2-DD54711326E5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TargetLogger.Tests", "test\TargetLogger.Tests\TargetLogger.Tests.csproj", "{EB47144E-B80C-432F-9170-D74F69824486}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{09CDC4EB-D196-4755-9CA2-DD54711326E5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{09CDC4EB-D196-4755-9CA2-DD54711326E5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{09CDC4EB-D196-4755-9CA2-DD54711326E5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EB47144E-B80C-432F-9170-D74F69824486}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EB47144E-B80C-432F-9170-D74F69824486}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EB47144E-B80C-432F-9170-D74F69824486}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EB47144E-B80C-432F-9170-D74F69824486}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
