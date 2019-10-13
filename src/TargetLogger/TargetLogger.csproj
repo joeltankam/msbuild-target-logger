@@ -9,6 +9,7 @@
     <PackageProjectId>joeltankam/msbuild-target-logger</PackageProjectId>
     <PackageProjectUrl>https://github.com/$(PackageProjectId)</PackageProjectUrl>
     <RepositoryUrl>https://github.com/joeltankam/msbuild-target-logger.git</RepositoryUrl>
+    <SuppressDependenciesWhenPacking>true</SuppressDependenciesWhenPacking>
     <TargetFramework>$(DefaultTargetFramework)</TargetFramework>
   </PropertyGroup>
 
