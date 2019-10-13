@@ -1,12 +1,13 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <Version>0.1</Version>
+    <Version>0.0.1</Version>
     <Authors>Joel TANKAM</Authors>
     <Title>TargetLogger</Title>
     <Description>A console logger that logs only targets being built.</Description>
     <PackageTags>logger;console;target;project;progress</PackageTags>
-    <PackageProjectUrl>https://github.com/joeltankam/msbuild-target-logger</PackageProjectUrl>
+    <PackageProjectId>joeltankam/msbuild-target-logger</PackageProjectId>
+    <PackageProjectUrl>https://github.com/$(PackageProjectId)</PackageProjectUrl>
     <RepositoryUrl>https://github.com/joeltankam/msbuild-target-logger.git</RepositoryUrl>
     <TargetFramework>$(DefaultTargetFramework)</TargetFramework>
   </PropertyGroup>
@@ -16,5 +17,16 @@
     <PackageReference Include="Microsoft.Build.Framework" Version="16.3.0" />
     <PackageReference Include="Microsoft.Build.Utilities.Core" Version="16.3.0" />
   </ItemGroup>
+
+  <Target Name="NuGetPublish" DependsOnTargets="Clean;Pack">
+    <PropertyGroup>
+      <PackageFile>$(PackageOutputPath)\$(PackageId).$(PackageVersion).nupkg</PackageFile>
+      <TagName>v$(PackageVersion)</TagName>
+    </PropertyGroup>
+    <Exec Command="git tag $(TagName)" />
+    <Exec Command="git push --tags" />
+    <Exec Command="dotnet nuget push $(PackageFile)" />
+    <Exec Command="curl -d {\&quot;name\&quot;=$(TagName),\&quot;tag_name\&quot;=$(TagName)} -H &quot;Authorization: Bearer $(GITHUB_REPO_TOKEN)&quot; https://api.github.com/repos/$(PackageProjectId)/releases" />
+  </Target>
 
 </Project>
