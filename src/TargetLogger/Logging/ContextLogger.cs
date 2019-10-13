@@ -84,7 +84,6 @@ namespace TargetLogger.Logging
             // Same as BuildEventContext.GetHashCode(), except we don't go down to task level
             var hash = 17;
             hash = hash * 31 + context.NodeId;
-            hash = hash * 31 + context.EvaluationId;
             hash = hash * 31 + context.TargetId;
             hash = hash * 31 + context.ProjectContextId;
             hash = hash * 31 + context.ProjectInstanceId;

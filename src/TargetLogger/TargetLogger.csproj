@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <Version>0.0.1</Version>
-    <Authors>Joel TANKAM</Authors>
+    <Authors>joeltankam</Authors>
     <Title>TargetLogger</Title>
     <Description>A console logger that logs only targets being built.</Description>
     <PackageTags>logger;console;target;project;progress</PackageTags>
@@ -14,8 +14,8 @@
 
   <ItemGroup>
     <PackageReference Include="JetBrains.Annotations" Version="2019.1.3" />
-    <PackageReference Include="Microsoft.Build.Framework" Version="16.3.0" />
-    <PackageReference Include="Microsoft.Build.Utilities.Core" Version="16.3.0" />
+    <PackageReference Include="Microsoft.Build.Framework" Version="14.3.0" />
+    <PackageReference Include="Microsoft.Build.Utilities.Core" Version="14.3.0" />
   </ItemGroup>
 
   <Target Name="NuGetPublish" DependsOnTargets="Clean;Pack">
