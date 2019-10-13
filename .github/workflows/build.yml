@@ -15,3 +15,5 @@ jobs:
         dotnet-version: 2.2.108
     - name: Build and test packaging
       run: dotnet pack --configuration Release
+    - name: Run tests
+      run: dotnet test
