@@ -25,7 +25,7 @@
     <Exec Command="git tag $(TagName)" />
     <Exec Command="git push --tags" />
     <Exec Command="dotnet nuget push $(PackageFile)" />
-    <Exec Command="curl -d {\&quot;name\&quot;=$(TagName),\&quot;tag_name\&quot;=$(TagName)} -H &quot;Authorization: Bearer $(GITHUB_REPO_TOKEN)&quot; https://api.github.com/repos/$(PackageProjectId)/releases" />
+    <Exec Command="curl -d {\&quot;name\&quot;:\&quot;$(TagName)\&quot;,\&quot;tag_name\&quot;:\&quot;$(TagName)\&quot;} -H &quot;Authorization: Bearer $(GITHUB_REPO_TOKEN)&quot; https://api.github.com/repos/$(PackageProjectId)/releases" />
   </Target>
 
 </Project>
