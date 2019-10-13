@@ -8,21 +8,21 @@ namespace TargetLogger.EventSources
 {
     internal class PersistedEventSource : BasicEventSource
     {
-        [NotNull] protected readonly IDictionary<BuildEventContext, BuildStatusEventArgs> EventContexts;
+        [NotNull] private readonly IDictionary<BuildEventContext, BuildStatusEventArgs> eventContexts;
 
         protected PersistedEventSource([NotNull] IContextLogger logger) : base(logger)
         {
-            EventContexts = new Dictionary<BuildEventContext, BuildStatusEventArgs>();
+            eventContexts = new Dictionary<BuildEventContext, BuildStatusEventArgs>();
         }
 
         protected void Save([NotNull] BuildStatusEventArgs e)
         {
-            EventContexts.Add(e.BuildEventContext, e);
+            eventContexts.Add(e.BuildEventContext, e);
         }
 
         protected TimeSpan GetDuration([NotNull] BuildStatusEventArgs e)
         {
-            return EventContexts.TryGetValue(e.BuildEventContext, out var startingEvent)
+            return eventContexts.TryGetValue(e.BuildEventContext, out var startingEvent)
                 ? e.Timestamp.Subtract(startingEvent.Timestamp)
                 : TimeSpan.Zero;
         }
