@@ -9,13 +9,11 @@
     <PackageProjectId>joeltankam/msbuild-target-logger</PackageProjectId>
     <PackageProjectUrl>https://github.com/$(PackageProjectId)</PackageProjectUrl>
     <RepositoryUrl>https://github.com/joeltankam/msbuild-target-logger.git</RepositoryUrl>
-    <SuppressDependenciesWhenPacking>true</SuppressDependenciesWhenPacking>
     <TargetFramework>$(DefaultTargetFramework)</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="JetBrains.Annotations" Version="2019.1.3" />
-    <PackageReference Include="Microsoft.Build.Framework" Version="14.3.0" />
+    <PackageReference Include="JetBrains.Annotations" Version="2019.1.3" PrivateAssets="all" />
     <PackageReference Include="Microsoft.Build.Utilities.Core" Version="14.3.0" />
   </ItemGroup>
 
