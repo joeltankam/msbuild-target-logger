@@ -21,7 +21,7 @@ nuget install TargetLogger -OutputDirectory packages
 The logging assembly is located under : `lib\netstandard2.0\TargetLogger.dll`. This file is passed to MSBuild to specify our custom logging. 
 
 ```bash
-msbuild /nologo /noconsolelogger /logger:packages/TargetLogger.0.0.1/lib/netstandar2.0/TargetLogger.dll
+msbuild /nologo /noconsolelogger /logger:packages/TargetLogger.1.0.0/lib/netstandar2.0/TargetLogger.dll
 ```
 
 The `/noconsolelogger` switch is important to remove MSBuild's default console output.
