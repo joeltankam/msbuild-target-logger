@@ -3,7 +3,7 @@ using JetBrains.Annotations;
 
 namespace TargetLogger
 {
-    public static class StringExtensions
+    internal static class StringExtensions
     {
         [NotNull]
         public static string GetPathFileName([NotNull] this string path)

@@ -4,7 +4,7 @@ using JetBrains.Annotations;
 
 namespace TargetLogger
 {
-    public static class TimeSpanExtensions
+    internal static class TimeSpanExtensions
     {
         [NotNull]
         public static string ToShortString(this TimeSpan duration)

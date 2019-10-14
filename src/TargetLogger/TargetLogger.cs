@@ -1,8 +1,11 @@
-﻿using JetBrains.Annotations;
+﻿using System.Runtime.CompilerServices;
+using JetBrains.Annotations;
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
 using TargetLogger.EventSources;
 using TargetLogger.Logging;
+
+[assembly: InternalsVisibleTo("TargetLogger.Tests")]
 
 namespace TargetLogger
 {
